@@ -1,0 +1,14 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Title Here</title>
+    </head>
+
+    <body>
+        <p>Register</p>
+        <form method='POST' action=''>>{% csrf_token %}
+            {{ form.as_p }}
+        </form>
+        <input type='submit' value='Sign up'/>
+    </body>
+</html>
