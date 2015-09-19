@@ -42,6 +42,16 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='JobTag',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('job', models.ForeignKey(related_name='job_t', to='SignUp.Job')),
+            ],
+            options={
+                'db_table': 'jobtag',
+            },
+        ),
+        migrations.CreateModel(
             name='SignUp',
             fields=[
                 ('user_id', models.AutoField(serialize=False, primary_key=True)),
@@ -52,25 +62,56 @@ class Migration(migrations.Migration):
                 ('last_updated', models.DateTimeField(auto_now=True)),
             ],
             options={
-                'db_table': 'signup',
+                'db_table': 'user',
             },
         ),
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('tag_id', models.PositiveSmallIntegerField()),
+                ('tag_id', models.AutoField(serialize=False, primary_key=True)),
                 ('tag_name', models.CharField(max_length=50)),
-                ('job', models.ForeignKey(to='SignUp.Job', related_name='job_tag')),
-                ('user', models.ForeignKey(to='SignUp.SignUp', related_name='user_tag')),
             ],
             options={
                 'db_table': 'tag',
             },
         ),
+        migrations.CreateModel(
+            name='UserTag',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('tag', models.ForeignKey(related_name='tag_i', to='SignUp.Tag')),
+                ('user', models.ForeignKey(related_name='user_t', to='SignUp.SignUp')),
+            ],
+            options={
+                'db_table': 'usertag',
+            },
+        ),
+        migrations.AddField(
+            model_name='signup',
+            name='tag',
+            field=models.ManyToManyField(to='SignUp.Tag', through='SignUp.UserTag'),
+        ),
+        migrations.AddField(
+            model_name='jobtag',
+            name='tag',
+            field=models.ForeignKey(related_name='tag_t', to='SignUp.Tag'),
+        ),
+        migrations.AddField(
+            model_name='job',
+            name='tag',
+            field=models.ManyToManyField(to='SignUp.Tag', through='SignUp.JobTag'),
+        ),
         migrations.AddField(
             model_name='company',
             name='job',
             field=models.ForeignKey(to='SignUp.Job'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='usertag',
+            unique_together=set([('user', 'tag')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='jobtag',
+            unique_together=set([('job', 'tag')]),
         ),
     ]
